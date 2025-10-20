@@ -2,19 +2,20 @@ import React from "react";
 
 export default function Hero() {
   return (
-    <header className="relative px-6 py-20 bg-gradient-to-r from-pink-400 via-purple-500 to-indigo-600 text-white">
+    <header className="px-6 py-16 bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-10">
         {/* Text section */}
         <div className="flex-1 space-y-6">
-          <h1 className="text-5xl md:text-6xl font-extrabold leading-tight">
+          <h1 className="text-5xl md:text-6xl font-bold leading-tight">
             Redefine Your Style
           </h1>
-          <p className="text-lg md:text-xl text-white/90">
-            Step into the latest trends — explore our curated collection made for every vibe.
+          <p className="text-lg md:text-xl text-gray-700 dark:text-gray-300">
+            Step into the latest trends — explore our curated collection made
+            for every vibe.
           </p>
           <a
             href="#collection"
-            className="inline-block mt-4 px-6 py-3 bg-white text-indigo-600 font-semibold rounded-lg shadow-lg hover:scale-105 transform transition-all duration-300"
+            className="inline-block mt-4 px-6 py-3 bg-indigo-600 text-white font-medium rounded-md hover:bg-indigo-700 transition-all"
           >
             Explore Dresses
           </a>
@@ -28,11 +29,6 @@ export default function Hero() {
             className="w-full h-auto max-h-96 object-contain"
           />
         </div>
-      </div>
-
-      {/* Scroll down hint */}
-      <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 animate-bounce">
-        <span className="text-white text-lg">⌄ Scroll Down ⌄</span>
       </div>
     </header>
   );

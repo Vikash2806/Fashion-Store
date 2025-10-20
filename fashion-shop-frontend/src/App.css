@@ -1,3 +1,4 @@
+/* Root container */
 #root {
   max-width: 1280px;
   margin: 0 auto;
@@ -5,6 +6,7 @@
   text-align: center;
 }
 
+/* Logo styling */
 .logo {
   height: 6em;
   padding: 1.5em;
@@ -18,6 +20,7 @@
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
 
+/* Logo spin animation */
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);
@@ -33,10 +36,33 @@
   }
 }
 
+/* Card styling */
 .card {
   padding: 2em;
 }
 
+/* Read the docs link */
 .read-the-docs {
   color: #888;
+}
+
+/* -------------------------
+   Animated Gradient Background
+   ------------------------- */
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animated-bg {
+  background: linear-gradient(-45deg, #f3e5f5, #e1bee7, #c5cae9, #f8bbd0);
+  background-size: 400% 400%;
+  animation: gradientShift 20s ease infinite;
 }

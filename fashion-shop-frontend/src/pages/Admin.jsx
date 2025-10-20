@@ -42,22 +42,32 @@ export default function Admin() {
 
   const handleFiles = (e) => {
     const selected = Array.from(e.target.files);
-    setFiles(selected);
-    setPreviews(selected.map((file) => URL.createObjectURL(file)));
+    setFiles((prev) => [...prev, ...selected]);
+    setPreviews((prev) => [
+      ...prev,
+      ...selected.map((file) => URL.createObjectURL(file)),
+    ]);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       let uploadedUrls = [];
-      if (files.length) uploadedUrls = await uploadImages(files, token);
+
+      if (files.length) {
+        uploadedUrls = await uploadImages(files, token);
+      }
+
+      const existingUrls = form.images
+        ? form.images.split(",").map((s) => s.trim()).filter(Boolean)
+        : [];
+
+      const finalImages = [...existingUrls, ...uploadedUrls];
 
       const dressData = {
         name: form.name,
         price: Number(form.price),
-        images: uploadedUrls.length
-          ? uploadedUrls
-          : form.images.split(",").map((s) => s.trim()),
+        images: finalImages,
       };
 
       if (editingId) {
@@ -100,9 +110,9 @@ export default function Admin() {
 
   if (!loggedIn) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-300 dark:from-gray-900 dark:to-gray-800">
-        <div className="bg-white/70 dark:bg-gray-800/80 backdrop-blur-xl shadow-lg p-8 rounded-2xl w-[90%] max-w-md">
-          <h2 className="text-3xl font-bold mb-6 text-center text-gray-800 dark:text-gray-100">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
+        <div className="bg-white dark:bg-gray-800 shadow-md p-8 rounded-2xl w-[90%] max-w-md">
+          <h2 className="text-3xl font-bold mb-6 text-center text-gray-900 dark:text-white">
             Admin Login
           </h2>
           <form onSubmit={handleLogin} className="space-y-4">
@@ -111,9 +121,9 @@ export default function Admin() {
               placeholder="Enter Admin Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full p-3 rounded-lg bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+              className="w-full p-3 rounded-lg bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
             />
-            <button className="w-full bg-indigo-600 hover:bg-indigo-700 transition-all text-white font-semibold px-4 py-2 rounded-lg shadow">
+            <button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-2 rounded-lg shadow transition-all">
               Login
             </button>
           </form>
@@ -123,11 +133,11 @@ export default function Admin() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 p-6 transition-all">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-6 transition-all">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="flex justify-between items-center mb-8">
-          <h2 className="text-4xl font-bold text-gray-800 dark:text-white tracking-tight">
+        <div className="flex justify-between items-center mb-8 flex-wrap gap-4">
+          <h2 className="text-4xl font-bold text-gray-900 dark:text-white">
             👗 Admin Dashboard
           </h2>
           <button
@@ -143,8 +153,8 @@ export default function Admin() {
         </div>
 
         {/* Form Card */}
-        <div className="bg-white/70 dark:bg-gray-800/80 backdrop-blur-xl shadow-xl p-6 rounded-2xl mb-8 transition-all">
-          <h3 className="text-xl font-semibold mb-4 text-gray-800 dark:text-white">
+        <div className="bg-white dark:bg-gray-800 shadow-md p-6 rounded-2xl mb-8 transition-all">
+          <h3 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">
             {editingId ? "✏️ Edit Dress" : "➕ Add New Dress"}
           </h3>
 
@@ -154,7 +164,7 @@ export default function Admin() {
               placeholder="Dress Name"
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
-              className="w-full p-3 rounded-lg bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+              className="w-full p-3 rounded-lg bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
               required
             />
             <input
@@ -162,26 +172,39 @@ export default function Admin() {
               placeholder="Price (₹)"
               value={form.price}
               onChange={(e) => setForm({ ...form, price: e.target.value })}
-              className="w-full p-3 rounded-lg bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+              className="w-full p-3 rounded-lg bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
               required
             />
 
             <div>
               <label className="text-sm text-gray-700 dark:text-gray-300">
-                Upload images or paste URLs:
+                Upload multiple images or paste URLs:
               </label>
-              <input
-                type="file"
-                multiple
-                onChange={handleFiles}
-                className="block mt-2"
-              />
+
+              {/* Custom File Upload */}
+              <div className="mt-2 flex items-center gap-3 flex-wrap">
+                <label className="cursor-pointer bg-indigo-600 hover:bg-indigo-700 text-white text-sm px-4 py-2 rounded-lg shadow transition-all">
+                  Choose Files
+                  <input
+                    type="file"
+                    multiple
+                    onChange={handleFiles}
+                    className="hidden"
+                  />
+                </label>
+                {files.length > 0 && (
+                  <span className="text-sm text-gray-600 dark:text-gray-400">
+                    {files.length} file(s) selected
+                  </span>
+                )}
+              </div>
+
               <input
                 type="text"
                 placeholder="Image URLs (comma separated)"
                 value={form.images}
                 onChange={(e) => setForm({ ...form, images: e.target.value })}
-                className="w-full mt-2 p-3 rounded-lg bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+                className="w-full mt-3 p-3 rounded-lg bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
               />
             </div>
 
@@ -198,8 +221,8 @@ export default function Admin() {
               </div>
             )}
 
-            <div className="flex gap-3">
-              <button className="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg shadow transition-all">
+            <div className="flex flex-wrap gap-3">
+              <button className="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2 rounded-lg shadow transition-all whitespace-nowrap">
                 {editingId ? "Update Dress" : "Add Dress"}
               </button>
               {editingId && (
@@ -211,7 +234,7 @@ export default function Admin() {
                     setFiles([]);
                     setPreviews([]);
                   }}
-                  className="bg-gray-400 hover:bg-gray-500 text-white px-5 py-2 rounded-lg shadow transition-all"
+                  className="bg-gray-500 hover:bg-gray-600 text-white px-5 py-2 rounded-lg shadow transition-all whitespace-nowrap"
                 >
                   Cancel
                 </button>
@@ -221,56 +244,58 @@ export default function Admin() {
         </div>
 
         {/* Dresses Table */}
-        <div className="bg-white/70 dark:bg-gray-800/80 backdrop-blur-xl shadow-xl rounded-2xl overflow-hidden transition-all">
-          <table className="w-full text-left text-gray-800 dark:text-gray-200">
-            <thead className="bg-indigo-600/80 text-white">
-              <tr>
-                <th className="p-3">#</th>
-                <th className="p-3">Name</th>
-                <th className="p-3">Price</th>
-                <th className="p-3">Images</th>
-                <th className="p-3 text-center">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {dresses.map((dress, index) => (
-                <tr
-                  key={dress._id}
-                  className="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-all"
-                >
-                  <td className="p-3">{index + 1}</td>
-                  <td className="p-3 font-medium">{dress.name}</td>
-                  <td className="p-3">₹{dress.price}</td>
-                  <td className="p-3">
-                    <div className="flex gap-2">
-                      {dress.images.slice(0, 3).map((img, i) => (
-                        <img
-                          key={i}
-                          src={img}
-                          alt=""
-                          className="w-12 h-12 object-cover rounded-lg border border-gray-300 dark:border-gray-600 shadow-sm"
-                        />
-                      ))}
-                    </div>
-                  </td>
-                  <td className="p-3 flex gap-2 justify-center">
-                    <button
-                      onClick={() => handleEdit(dress)}
-                      className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 px-3 py-1 rounded-lg transition-all"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDelete(dress._id)}
-                      className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg transition-all"
-                    >
-                      Delete
-                    </button>
-                  </td>
+        <div className="bg-white dark:bg-gray-800 shadow-md rounded-2xl overflow-hidden transition-all">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-gray-900 dark:text-gray-200 min-w-[600px]">
+              <thead className="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white">
+                <tr>
+                  <th className="p-3">#</th>
+                  <th className="p-3">Name</th>
+                  <th className="p-3">Price</th>
+                  <th className="p-3">Images</th>
+                  <th className="p-3 text-center">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {dresses.map((dress, index) => (
+                  <tr
+                    key={dress._id}
+                    className="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-all"
+                  >
+                    <td className="p-3">{index + 1}</td>
+                    <td className="p-3 font-medium">{dress.name}</td>
+                    <td className="p-3">₹{dress.price}</td>
+                    <td className="p-3">
+                      <div className="flex gap-2 flex-wrap">
+                        {dress.images.slice(0, 3).map((img, i) => (
+                          <img
+                            key={i}
+                            src={img}
+                            alt=""
+                            className="w-12 h-12 object-cover rounded-lg border border-gray-300 dark:border-gray-600 shadow-sm"
+                          />
+                        ))}
+                      </div>
+                    </td>
+                    <td className="p-3 flex gap-2 justify-center flex-wrap">
+                      <button
+                        onClick={() => handleEdit(dress)}
+                        className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 px-3 py-1 rounded-lg transition-all whitespace-nowrap"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDelete(dress._id)}
+                        className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-lg transition-all whitespace-nowrap"
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>

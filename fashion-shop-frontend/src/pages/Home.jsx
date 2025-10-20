@@ -20,8 +20,9 @@ export default function Home() {
   return (
     <>
       <Hero />
-
-      <DressGrid onDressClick={handleDressClick} />
+      <div id="collection" className="max-w-6xl mx-auto px-4 py-10">
+        <DressGrid onDressClick={handleDressClick} />
+      </div>
 
       {selectedDress && (
         <DressModal
