@@ -51,7 +51,6 @@ export default function DressGrid() {
           No dresses found 😢
         </div>
       ) : (
-        /* Dress Grid */
         <motion.div
           layout
           className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"
@@ -62,8 +61,9 @@ export default function DressGrid() {
               layoutId={`card-${d._id}`}
               onClick={() => setSelectedDress(d)}
               whileHover={{ scale: 1.03, y: -3 }}
-              transition={{ type: "spring", stiffness: 300 }}
+              transition={{ type: "spring", stiffness: 260, damping: 20 }}
               className="cursor-pointer rounded-xl overflow-hidden bg-white dark:bg-gray-900 shadow-sm hover:shadow-md transition-shadow duration-300"
+              style={{ willChange: "transform" }}
             >
               <DressCard dress={d} />
             </motion.div>

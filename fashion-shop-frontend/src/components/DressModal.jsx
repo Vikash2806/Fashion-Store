@@ -5,6 +5,7 @@ import {
   FaTimes,
   FaChevronLeft,
   FaChevronRight,
+  FaPhoneAlt,
 } from "react-icons/fa";
 import { motion } from "framer-motion";
 
@@ -23,19 +24,36 @@ export default function DressModal({ dress, onClose, layoutId }) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
+      transition={{ duration: 0.25, ease: "easeInOut" }}
     >
       {/* Background overlay */}
-      <div
+      <motion.div
         className="absolute inset-0 bg-black/70 backdrop-blur-sm"
         onClick={onClose}
-      ></div>
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.25 }}
+      />
 
       {/* Modal box */}
       <motion.div
         layoutId={layoutId}
+        initial={{ scale: 0.95, opacity: 0 }}
+        animate={{
+          scale: 1,
+          opacity: 1,
+          transition: { type: "spring", stiffness: 200, damping: 22 },
+        }}
+        exit={{
+          scale: 0.95,
+          opacity: 0,
+          transition: { duration: 0.25, ease: "easeInOut" },
+        }}
         className="relative z-10 bg-white/95 dark:bg-gray-900/90 backdrop-blur-2xl rounded-3xl shadow-2xl overflow-hidden w-full max-w-5xl flex flex-col md:flex-row border border-gray-200 dark:border-gray-700"
+        style={{ willChange: "transform, opacity" }}
       >
-        {/* Close button (fixed position on top right) */}
+        {/* Close button */}
         <button
           onClick={onClose}
           className="absolute top-3 right-3 z-20 text-gray-700 dark:text-gray-300 text-2xl bg-white/60 dark:bg-gray-800/60 rounded-full p-2 hover:text-red-500 shadow-md"
@@ -47,10 +65,14 @@ export default function DressModal({ dress, onClose, layoutId }) {
         <div className="md:w-1/2 w-full relative bg-gray-100 dark:bg-gray-800 flex flex-col items-center justify-center p-2">
           {images.length > 0 ? (
             <>
-              <img
+              <motion.img
+                key={currentIndex}
                 src={images[currentIndex]}
                 alt={dress.name}
-                className="w-full h-[280px] sm:h-[400px] md:h-[500px] object-contain rounded-xl transition-all duration-300"
+                className="w-full h-[280px] sm:h-[400px] md:h-[500px] object-contain rounded-xl"
+                initial={{ opacity: 0.4, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.4, ease: "easeOut" }}
               />
 
               {/* Navigation arrows */}
@@ -58,20 +80,20 @@ export default function DressModal({ dress, onClose, layoutId }) {
                 <>
                   <button
                     onClick={prevImage}
-                    className="absolute left-3 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 text-white p-2 rounded-full"
+                    className="absolute left-3 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 text-white p-2 rounded-full transition-all"
                   >
                     <FaChevronLeft />
                   </button>
                   <button
                     onClick={nextImage}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 text-white p-2 rounded-full"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 text-white p-2 rounded-full transition-all"
                   >
                     <FaChevronRight />
                   </button>
                 </>
               )}
 
-              {/* Thumbnail preview (2 per row on mobile) */}
+              {/* Thumbnails */}
               {images.length > 1 && (
                 <div className="grid grid-cols-2 sm:flex sm:flex-row gap-2 mt-3 mb-3 overflow-x-auto px-3">
                   {images.map((img, idx) => (
@@ -112,48 +134,75 @@ export default function DressModal({ dress, onClose, layoutId }) {
                 </p>
               </div>
 
-              <button
+              <motion.button
+                whileTap={{ scale: 0.97 }}
                 onClick={() => setShowOrder(true)}
                 className="w-full bg-gradient-to-r from-purple-600 via-pink-500 to-red-500 text-white py-3 rounded-xl text-lg font-semibold hover:scale-[1.02] shadow-lg transition-transform duration-300"
               >
                 Order Now
-              </button>
+              </motion.button>
             </>
           ) : (
-            <div className="flex flex-col items-center text-center space-y-6">
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 10 }}
+              transition={{ duration: 0.3 }}
+              className="flex flex-col items-center text-center space-y-6"
+            >
               <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">
                 Contact us to order this dress:
               </h3>
+
               <img
                 src="/qr-placeholder.png"
                 alt="QR code"
                 className="w-32 sm:w-40 h-32 sm:h-40 rounded-xl shadow-md"
               />
-              <div className="flex gap-6 text-2xl sm:text-3xl">
-                <a
-                  href="https://wa.me/9640311790"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-green-500 hover:scale-110 transition-transform"
-                >
-                  <FaWhatsapp />
-                </a>
-                <a
-                  href="https://instagram.com/"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-pink-500 hover:scale-110 transition-transform"
-                >
-                  <FaInstagram />
-                </a>
+
+              {/* Contact Methods */}
+              <div className="flex flex-col items-center gap-4">
+                <div className="flex gap-6 text-2xl sm:text-3xl">
+                  <a
+                    href="https://wa.me/919640311790"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-green-500 hover:scale-110 transition-transform"
+                    aria-label="WhatsApp"
+                  >
+                    <FaWhatsapp />
+                  </a>
+                  <a
+                    href="https://instagram.com/"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-pink-500 hover:scale-110 transition-transform"
+                    aria-label="Instagram"
+                  >
+                    <FaInstagram />
+                  </a>
+                  <a
+                    href="tel:+919640311790"
+                    className="text-blue-500 hover:scale-110 transition-transform"
+                    aria-label="Call"
+                  >
+                    <FaPhoneAlt />
+                  </a>
+                </div>
+
+                {/* Visible Contact Number */}
+                <p className="text-gray-700 dark:text-gray-300 text-lg font-medium">
+                  +91 96403 11790
+                </p>
               </div>
+
               <button
                 onClick={() => setShowOrder(false)}
                 className="text-indigo-600 dark:text-indigo-400 hover:underline mt-4"
               >
                 ← Back
               </button>
-            </div>
+            </motion.div>
           )}
         </div>
       </motion.div>
