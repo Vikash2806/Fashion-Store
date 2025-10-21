@@ -1,6 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 export default function Hero() {
+  useEffect(() => {
+    // Load the cursive font
+    const link = document.createElement("link");
+    link.href =
+      "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600&family=Dancing+Script:wght@500&display=swap";
+    link.rel = "stylesheet";
+    document.head.appendChild(link);
+  }, []);
+
   const handleScroll = (e) => {
     e.preventDefault();
     const section = document.querySelector("#collection");
@@ -14,13 +23,33 @@ export default function Hero() {
       <div className="max-w-7xl mx-auto flex flex-col-reverse md:flex-row items-center gap-12">
         {/* Text Section */}
         <div className="flex-1 space-y-6 text-center md:text-left">
-          <h1 className="text-5xl md:text-6xl font-extrabold leading-tight">
-            Redefine Your Style with <span className="text-gradient bg-clip-text text-transparent bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500">Vismita Collections</span>
+          <h1
+            className="text-5xl md:text-6xl font-extrabold leading-tight"
+            style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+          >
+            Redefine Your Style with{" "}
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 font-bold">
+              Vermillion
+            </span>
+            <br />
+            <span
+              className="text-indigo-500 text-[2rem] md:text-[2.3rem] font-medium"
+              style={{ fontFamily: "'Dancing Script', cursive" }}
+            >
+              Boutique & Fashion
+            </span>
           </h1>
+
           <p className="text-lg md:text-xl text-gray-700 dark:text-gray-300 max-w-md mx-auto md:mx-0">
-            Step into the latest trends  explore our curated collection of elegant dresses crafted for every vibe. From chic casuals to glamorous evenings, find the perfect style that expresses your personality. <br />
-            <span className="font-semibold text-indigo-600 dark:text-indigo-400">Your fashion journey starts here.</span>
+            Step into the latest trends and explore our curated collection of
+            elegant dresses crafted for every vibe. From chic casuals to
+            glamorous evenings, find the perfect style that expresses your
+            personality. <br />
+            <span className="font-semibold text-indigo-600 dark:text-indigo-400">
+              Your fashion journey starts here.
+            </span>
           </p>
+
           <a
             href="#collection"
             onClick={handleScroll}

@@ -28,7 +28,7 @@ export default function ContactModal({ onClose }) {
           initial={{ scale: 0.95, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.95, opacity: 0 }}
-          transition={{ type: "tween", duration: 0.25, ease: "easeOut" }}
+          transition={{ type: 'tween', duration: 0.25, ease: 'easeOut' }}
         >
           {/* Close button */}
           <button
@@ -49,21 +49,31 @@ export default function ContactModal({ onClose }) {
           <div className="flex flex-col gap-4 text-gray-800 dark:text-gray-200">
             <div className="flex items-center gap-3">
               <FaWhatsapp className="text-green-500 text-xl" />
-              <a
-                href="https://wa.me/919640311790"
-                target="_blank"
-                rel="noreferrer"
-                className="text-indigo-600 dark:text-indigo-400 font-medium hover:underline"
-              >
-                +91 96403 11790
-              </a>
+              <div className="flex flex-col sm:flex-row sm:items-center sm:gap-2">
+                <a
+                  href="https://wa.me/919640311790"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-indigo-600 dark:text-indigo-400 font-medium hover:underline"
+                >
+                  +91 96403 11790
+                </a>
+                <span className="hidden sm:inline text-gray-400">/</span>
+                <a
+                  href="https://wa.me/919092043554"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-indigo-600 dark:text-indigo-400 font-medium hover:underline"
+                >
+                  +91 90920 43554
+                </a>
+              </div>
             </div>
 
             <div className="flex items-start gap-3">
               <FaMapMarkerAlt className="text-red-500 text-xl mt-1" />
               <span>
-                Perumal Kovil Street, Kovaipudur - 641008, Coimbatore, Tamil
-                Nadu
+                Perumal Kovil Street, Kovaipudur - 641008, Coimbatore, Tamil Nadu
               </span>
             </div>
 

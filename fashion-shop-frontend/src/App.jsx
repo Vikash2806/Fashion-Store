@@ -1,13 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Routes, Route, Link, useLocation } from "react-router-dom";
 import Home from "./pages/Home";
 import Admin from "./pages/Admin";
-import ContactModal from "./components/ContactModal"; // ✅ import
+import ContactModal from "./components/ContactModal";
 
 export default function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [contactOpen, setContactOpen] = useState(false);
   const location = useLocation();
+
+  useEffect(() => {
+    const link = document.createElement("link");
+    link.href =
+      "https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700&family=Dancing+Script:wght@500&display=swap";
+    link.rel = "stylesheet";
+    document.head.appendChild(link);
+  }, []);
 
   const navLinkStyle = (path) =>
     `px-4 py-2 text-sm md:text-base font-medium rounded-md transition-all ${
@@ -21,18 +29,29 @@ export default function App() {
       {/* Floating Rounded Navbar */}
       <nav className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 w-[95%] md:w-[85%] rounded-3xl bg-white/90 dark:bg-gray-950/90 border border-gray-200 dark:border-gray-800 shadow-md backdrop-blur-md">
         <div className="max-w-6xl mx-auto px-6 py-3 flex justify-between items-center">
-          {/* ✅ Logo + Name */}
+          {/* ✅ Logo + Brand */}
           <Link
             to="/"
             className="flex items-center space-x-4 text-2xl font-semibold tracking-tight group"
           >
             <img
-              src="/logo3.png" // ✅ your logo path (inside /public)
-              alt="Vismita Logo"
+              src="/logo3.png"
+              alt="Vermillion Logo"
               className="w-12 h-12 md:w-14 md:h-14 object-contain drop-shadow-md"
             />
-            <span className="bg-gradient-to-r from-indigo-600 via-purple-500 to-pink-500 bg-clip-text text-transparent font-bold tracking-wide text-[1.6rem] md:text-[1.8rem] group-hover:drop-shadow-[0_0_8px_rgba(147,51,234,0.5)] transition-all duration-300">
-              Vismita <span className="text-indigo-500">Collections</span>
+            <span className="flex flex-col leading-tight">
+              <span
+                className="bg-gradient-to-r from-rose-600 via-pink-500 to-fuchsia-600 bg-clip-text text-transparent text-[2rem] md:text-[2.2rem] font-semibold tracking-tight group-hover:drop-shadow-[0_0_8px_rgba(236,72,153,0.5)] transition-all duration-300"
+                style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+              >
+                Vermillion
+              </span>
+              <span
+                className="text-indigo-500 font-medium text-base md:text-lg tracking-wide"
+                style={{ fontFamily: "'Dancing Script', cursive" }}
+              >
+                Boutique & Fashion
+              </span>
             </span>
           </Link>
 
