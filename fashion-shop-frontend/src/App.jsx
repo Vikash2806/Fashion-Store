@@ -35,7 +35,7 @@ export default function App() {
             className="flex items-center space-x-4 text-2xl font-semibold tracking-tight group"
           >
             <img
-              src="/logo3.png"
+              src="/logo4.png"
               alt="Vermillion Logo"
               className="w-12 h-12 md:w-14 md:h-14 object-contain drop-shadow-md"
             />
